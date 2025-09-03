@@ -6,18 +6,18 @@
 
 ## 🎯 Visão Geral
 
-[cite_start]O AxonAI é um orquestrador inteligente projetado para resolver a ineficiência e a perda de contexto no desenvolvimento de software assistido por IA[cite: 10]. [cite_start]O fluxo de trabalho atual entre conversar com um LLM e executar tarefas em ferramentas de projeto é manual e desarticulado[cite: 3, 5]. [cite_start]AxonAI transforma essas conversas em planos de projeto executáveis e estruturados (tarefas e checklists)[cite: 10, 12].
+O AxonAI é um orquestrador inteligente projetado para resolver a ineficiência e a perda de contexto no desenvolvimento de software assistido por IA. O fluxo de trabalho atual entre conversar com um LLM e executar as tarefas em ferramentas de projeto é manual e desarticulado. AxonAI transforma essas conversas em planos de projeto executáveis e estruturados (tarefas e checklists).
 
-[cite_start]A funcionalidade chave é o **"Modo Foco"**, que cria um chat contextualizado para cada item de checklist, fornecendo à IA apenas o histórico relevante para aquela micro-tarefa, aumentando drasticamente a precisão da IA e a produtividade do desenvolvedor[cite: 15, 18].
+A funcionalidade chave é o **"Modo Foco"**, que cria um chat contextualizado para cada item de checklist, fornecendo à IA apenas o histórico relevante para aquela micro-tarefa, aumentando drasticamente a precisão da IA e a produtividade do desenvolvedor.
 
 ## 🛠️ Stack Tecnológica
 
 | Camada          | Tecnologias Principais                                                                   |
 | --------------- | ---------------------------------------------------------------------------------------- |
-| **Backend** | [cite_start]Java 21 LTS [cite: 46][cite_start], Spring Boot 3 [cite: 46][cite_start], Maven [cite: 46]                        |
-| **Frontend** | [cite_start]React 19 [cite: 47][cite_start], Vite[cite: 47], TypeScript                                         |
-| **Banco de Dados** | [cite_start]PostgreSQL [cite: 48]                                                                    |
-| **Infraestrutura** | [cite_start]PaaS via [Render.com](https://render.com)[cite: 50], Docker & Docker Compose (para dev local) |
+| **Backend** | Java 21 LTS, Spring Boot 3, Maven                        |
+| **Frontend** | React 19, Vite, TypeScript                                         |
+| **Banco de Dados** | PostgreSQL                                                                    |
+| **Infraestrutura** | PaaS via [Render.com](https://render.com), Docker & Docker Compose (para dev local) |
 
 ## 🚀 Começando (Getting Started)
 
@@ -64,7 +64,7 @@ Após estes passos, o ambiente estará totalmente funcional:
 
 ## 🏛️ Arquitetura
 
-[cite_start]O sistema é um **Monolito Modular** que segue os princípios da **Arquitetura Hexagonal (Ports & Adapters)** [cite: 41] e do **Domain-Driven Design (DDD)**.
+O sistema é um **Monolito Modular** que segue os princípios da **Arquitetura Hexagonal (Ports & Adapters)** e do **Domain-Driven Design (DDD)**.
 
 A estrutura de pacotes do backend reflete esta escolha, com uma separação clara entre:
 * `domain`: O núcleo de negócio puro.
