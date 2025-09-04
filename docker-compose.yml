@@ -1,0 +1,60 @@
+# #####################################################################
+# Docker Compose para o Ambiente de Desenvolvimento Local do AxonAI
+# #####################################################################
+# Este arquivo define e orquestra os serviços necessários para rodar
+# a aplicação AxonAI localmente: o backend e o banco de dados.
+#
+# Comando para executar: docker-compose up --build
+# Comando para parar: docker-compose down
+# #####################################################################
+
+services:
+  # --- Serviço do Banco de Dados PostgreSQL ---
+  db:
+    image: postgres:16-alpine
+    container_name: axonal-db-local
+    # Variáveis de ambiente para configurar o container do PostgreSQL.
+    environment:
+      - POSTGRES_USER=axonaluser
+      - POSTGRES_PASSWORD=axonalpass
+      - POSTGRES_DB=axonaldb
+    # Mapeia um volume nomeado para a pasta de dados do Postgres, garantindo
+    # que os dados persistam mesmo que o container seja recriado.
+    volumes:
+      - axonal-db-data:/var/lib/postgresql/data
+    # Expõe a porta 5432 do container para a porta 5432 da sua máquina local.
+    ports:
+      - "5432:5432"
+    # Verificação de saúde: garante que o banco de dados está pronto para aceitar conexões.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U axonaluser -d axonaldb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Serviço da Aplicação Backend ---
+  backend:
+    container_name: axonal-backend-local
+    # Constrói a imagem a partir do Dockerfile localizado no diretório ./backend.
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    # Variáveis de ambiente para a aplicação Spring Boot.
+    environment:
+      # O hostname 'db' é o nome do serviço do banco de dados definido acima.
+      # O Docker Compose gerencia a resolução de nomes nesta rede interna.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/axonaldb
+      - SPRING_DATASOURCE_USERNAME=axonaluser
+      - SPRING_DATASOURCE_PASSWORD=axonalpass
+      # Deixa o Flyway gerenciar o schema, em vez do Hibernate.
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+    # Garante que o serviço 'backend' só tentará iniciar DEPOIS que o serviço 'db'
+    # for considerado saudável (passar no healthcheck).
+    depends_on:
+      db:
+        condition: service_healthy
+
+# Declaração do volume nomeado para persistência dos dados do banco.
+volumes:
+  axonal-db-data:
