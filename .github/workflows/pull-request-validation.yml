@@ -39,7 +39,11 @@ jobs:
       # o que inclui compilar, rodar testes unitários, de integração e de arquitetura.
       # A flag -B executa o Maven em modo "batch", ideal para CI.
       - name: Build and Test with Maven
-        run: mvn -B verify --file backend/pom.xml
+        # Adicionamos 'working-directory' para que o comando seja executado
+        # a partir da pasta /backend.
+        working-directory: ./backend
+        # O comando agora é mais simples, pois o Maven encontrará o pom.xml automaticamente.
+        run: mvn -B verify
 
   # --- Job para validar o código do Frontend ---
   validate-frontend:
