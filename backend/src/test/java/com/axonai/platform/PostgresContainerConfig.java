@@ -1,4 +1,4 @@
-package com.axonal.platform;
+package com.axonai.platform;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
