@@ -3,9 +3,13 @@ package com.axonai.platform.architecture;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.stereotype.Service;
+
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 @DisplayName("Validação da Arquitetura Hexagonal")
@@ -62,4 +66,46 @@ class HexagonalArchitectureTest {
 
         rule.check(importedClasses);
     }
+
+    @Test
+    @DisplayName("Domínio só deve depender de si mesmo e de bibliotecas aprovadas")
+    void domain_should_only_depend_on_approved_libraries() {
+        // REGRA (REFINADA): É uma regra de "lista branca". O domínio só pode acessar
+        // classes de si mesmo, do Java, e de algumas poucas bibliotecas de anotações.
+        ArchRule rule = classes()
+                .that().resideInAPackage("..domain..")
+                .should().onlyDependOnClassesThat()
+                .resideInAnyPackage(
+                        "com.axonal.platform.domain..",
+                        "java..",
+                        "jakarta.validation..",
+                        "lombok.."
+                );
+
+        rule.check(importedClasses);
+    }
+
+    // --- REGRAS DE CONVENÇÃO E CODIFICAÇÃO ---
+
+    @Test
+    @DisplayName("Serviços de aplicação devem ter o sufixo 'Service'")
+    void application_services_should_be_named_correctly() {
+        ArchRule rule = classes()
+                .that().resideInAPackage("..application.service..")
+                .and().areAnnotatedWith(Service.class)
+                .should().haveSimpleNameEndingWith("Service");
+
+        rule.check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("Anotação @Transactional só deve ser usada nos serviços da aplicação")
+    void transactional_annotation_should_only_be_used_on_application_services() {
+        ArchRule rule = classes()
+                .that().areAnnotatedWith(Transactional.class)
+                .should().resideInAPackage("..application.service..");
+
+        rule.check(importedClasses);
+    }
+
 }
