@@ -1,0 +1,5 @@
+# Arquivo de configuração principal
+# Ativa o perfil 'dev' por padrão quando nenhum outro é especificado.
+spring:
+  profiles:
+    active: dev

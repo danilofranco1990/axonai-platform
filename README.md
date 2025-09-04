@@ -34,24 +34,33 @@ Você precisa ter as seguintes ferramentas instaladas:
 
 ### Configuração e Execução
 
-O projeto é projetado para ser executado com um único comando, graças ao Docker Compose, que orquestra o backend e o banco de dados.
+Com Docker e Docker Compose instalados, o ambiente completo (Backend + Banco de Dados) pode ser iniciado com um único comando a partir da raiz do projeto.
 
-1.  **Clone o repositório:**
+1.  **Clone o repositório (se ainda não o fez):**
     ```bash
     git clone [URL_DO_SEU_REPOSITORIO]
     cd axonal-platform
     ```
 
-2.  **Suba o ambiente completo (Backend + Banco de Dados):**
+2.  **Crie seu arquivo `.env` local:**
+    * O backend precisa de um arquivo `.env` com as credenciais do banco de dados para rodar. Nós fornecemos um template para isso.
+    ```bash
+    # A partir da raiz do projeto
+    cd backend
+    cp .env.example .env
+    # Edite o arquivo .env se precisar alterar os valores padrão
+    cd ..
+    ```
+
+3.  **Suba todo o ambiente com Docker Compose:**
     ```bash
     docker-compose up --build
     ```
-    * O comando `--build` é necessário na primeira vez para construir a imagem Docker do backend.
+    * O comando `--build` é recomendado na primeira vez ou sempre que o `Dockerfile` ou o código-fonte do backend for alterado. Para apenas iniciar o ambiente, `docker-compose up` é suficiente.
 
-3.  **Execute o Frontend:**
-    * Em um terminal separado, navegue até a pasta do frontend e inicie o servidor de desenvolvimento:
+4.  **Execute o Frontend (em um terminal separado):**
     ```bash
-    cd frontend 
+    cd frontend
     npm install
     npm run dev
     ```
