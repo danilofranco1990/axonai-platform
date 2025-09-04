@@ -1,5 +1,20 @@
-# Arquivo de configuração principal
-# Ativa o perfil 'dev' por padrão quando nenhum outro é especificado.
+# Arquivo de configuraï¿½ï¿½o principal
+# Ativa o perfil 'dev' por padrï¿½o quando nenhum outro ï¿½ especificado.
 spring:
   profiles:
     active: dev
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+openapi:
+  info:
+    title: AxonAI Platform API
+    version: v0.0.1
+    description: API para o orquestrador de projetos assistidos por IA.
+    license:
+      name: MIT License
+      url: https://opensource.org/license/mit/

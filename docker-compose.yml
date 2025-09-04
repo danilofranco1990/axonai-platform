@@ -4,13 +4,13 @@ services:
     container_name: axonal-db-local
     # O Docker Compose lê o .env do backend e passa as variáveis para este container.
     env_file:
-      - ./backend/.env
+      - ./.env
     volumes:
       - axonal-db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d axonaldb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -18,10 +18,10 @@ services:
   backend:
     container_name: axonal-backend-local
     build:
-      context: ./backend
+      context: ./
     # Passa o arquivo .env para dentro do container do backend.
     env_file:
-      - ./backend/.env
+      - ./.env
     ports:
       - "8080:8080"
     # A configuração do datasource agora é feita pelo Spring Profile, mas
