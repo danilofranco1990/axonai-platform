@@ -1,10 +1,21 @@
+# #####################################################################
+# Docker Compose para o Ambiente de Desenvolvimento Local do AxonAI
+# #####################################################################
+# Este arquivo define e orquestra os serviços necessários para rodar
+# a aplicação AxonAI localmente: o backend e o banco de dados.
+#
+# Comando para executar: docker-compose up --build
+# Comando para parar: docker-compose down
+# #####################################################################
+
 services:
+  # --- Serviço do Banco de Dados PostgreSQL ---
   db:
     image: postgres:16-alpine
     container_name: axonal-db-local
-    # O Docker Compose lê o .env do backend e passa as variáveis para este container.
+    # CORREÇÃO: O caminho para o .env agora aponta para dentro da pasta 'backend'.
     env_file:
-      - ./.env
+      - ./backend/.env
     volumes:
       - axonal-db-data:/var/lib/postgresql/data
     ports:
@@ -15,18 +26,19 @@ services:
       timeout: 5s
       retries: 5
 
+  # --- Serviço da Aplicação Backend ---
   backend:
     container_name: axonal-backend-local
     build:
-      context: ./
-    # Passa o arquivo .env para dentro do container do backend.
+      # CORREÇÃO: O contexto de build do Docker agora é o diretório './backend'.
+      context: ./backend
+    # CORREÇÃO: O caminho para o .env agora aponta para dentro da pasta 'backend'.
     env_file:
-      - ./.env
+      - ./backend/.env
     ports:
       - "8080:8080"
-    # A configuração do datasource agora é feita pelo Spring Profile, mas
-    # precisamos sobrescrever a URL para usar o hostname da rede Docker.
     environment:
+      # Esta sobrescrita continua correta e necessária.
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/axonaldb
     depends_on:
       db:
