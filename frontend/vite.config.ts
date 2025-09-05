@@ -11,7 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
     // Adicione esta seção para mocar os imports de CSS
-    css: true, 
+    css: true,
   },
   // Adicione esta seção para mocar os imports de imagens
   resolve: {

@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AxonaiPlatformApplicationTests extends PostgresContainerConfig{
+class AxonaiPlatformApplicationTests extends PostgresContainerConfig {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {}
 }
