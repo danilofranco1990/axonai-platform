@@ -1,7 +1,7 @@
 # AxonAI Platform
 
 ![CI Status](https://img.shields.io/badge/CI-Pending-yellow)
-![Code Coverage](https://img.shields.io/badge/Coverage-Pending-yellow)
+[![codecov](https://codecov.io/github/danilofranco1990/axonai-platform/graph/badge.svg?token=L1CTD2VTGM)](https://codecov.io/github/danilofranco1990/axonai-platform)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
 ## 🎯 Visão Geral

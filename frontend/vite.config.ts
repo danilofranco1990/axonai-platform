@@ -24,6 +24,12 @@ export default defineConfig({
         'src/types',         // Excluir ficheiros que contêm apenas tipos
         // Adicione aqui outros ficheiros/pastas a serem ignorados
       ],
+      thresholds: {
+        lines: 60,
+        functions: 50, // Podemos ter um limiar diferente para funções
+        branches: 60,
+        statements: 60,
+      }
     },
   },
   // Adicione esta seção para mocar os imports de imagens

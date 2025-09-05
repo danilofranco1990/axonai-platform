@@ -1,0 +1,14 @@
+# codecov.yml
+coverage:
+  status:
+    project:
+      default:
+        # Define a meta de cobertura para o projeto como um todo.
+        target: 70%
+        # Permite uma pequena queda na cobertura geral sem falhar o PR.
+        threshold: 1%
+    patch:
+      default:
+        # Regra mais importante: exige que o CÓDIGO NOVO/MODIFICADO neste PR
+        # tenha pelo menos 80% de cobertura.
+        target: 80%
