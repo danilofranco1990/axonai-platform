@@ -45,13 +45,24 @@ jobs:
         # O comando agora é mais simples, pois o Maven encontrará o pom.xml automaticamente.
         run: mvn -B verify
 
+      - name: Upload Backend Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          # O token que guardamos nos segredos do GitHub
+          token: ${{ secrets.CODECOV_TOKEN }}
+          # O ficheiro de relatório XML gerado pelo JaCoCo
+          files: ./backend/target/site/jacoco/jacoco.xml
+          # Uma flag para identificar este relatório como sendo do backend
+          flags: backend  
+
   # --- Job para validar o código do Frontend ---
+# --- Job para validar o código do Frontend ---
   validate-frontend:
     runs-on: ubuntu-latest
     
+    # Define o diretório de trabalho padrão para TODOS os comandos 'run' neste job.
     defaults:
       run:
-        # Define o diretório de trabalho padrão para os comandos 'run'.
         working-directory: ./frontend
 
     steps:
@@ -64,18 +75,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # Ativa o cache para as dependências do NPM.
           cache: 'npm'
+          # O caminho para o cache deve ser relativo à raiz do repositório.
           cache-dependency-path: frontend/package-lock.json
 
-      # Passo 3: Instala as dependências de forma limpa e reproduzível.
-      # 'npm ci' é a prática recomendada para CI, pois usa o package-lock.json.
+      # Passo 3: Instala as dependências.
       - name: Install Dependencies
         run: npm ci
 
-      # Passo 4: Executa o Linter, os Testes e o Build do projeto frontend.
-      - name: Lint, Test and Build
+      # Passo 4: Executa o Linter e gera o relatório de cobertura.
+      - name: Lint and Generate Coverage
         run: |
           npm run lint
-          npm run test
-          npm run build
+          npm run coverage
+
+      # Passo 5: Executa o Build do projeto.
+      - name: Build Project
+        run: npm run build
+
+      # Passo 6: Envia o relatório de cobertura do Frontend para o Codecov.
+      - name: Upload Frontend Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        # A action do codecov precisa saber onde encontrar o ficheiro,
+        # então o working-directory é útil aqui para simplificar o path.
+        working-directory: ./frontend
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          # O caminho agora é relativo ao working-directory.
+          files: ./tests/coverage/coverage-final.json
+          flags: frontend
