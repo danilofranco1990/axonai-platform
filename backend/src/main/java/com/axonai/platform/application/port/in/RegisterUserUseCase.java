@@ -1,4 +1,3 @@
 package com.axonai.platform.application.port.in;
 
-public class RegisterUserUseCase {
-}
+public class RegisterUserUseCase {}
