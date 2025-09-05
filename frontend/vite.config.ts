@@ -12,6 +12,19 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
     // Adicione esta seção para mocar os imports de CSS
     css: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'], // Formatos do relatório
+      reportsDirectory: './tests/coverage', // Onde salvar os relatórios
+      all: true,
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+      exclude: [
+        'src/main.tsx',      // Excluir o ponto de entrada da aplicação
+        'src/vite-env.d.ts', // Excluir definições de tipo do Vite
+        'src/types',         // Excluir ficheiros que contêm apenas tipos
+        // Adicione aqui outros ficheiros/pastas a serem ignorados
+      ],
+    },
   },
   // Adicione esta seção para mocar os imports de imagens
   resolve: {
