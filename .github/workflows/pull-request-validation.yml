@@ -98,7 +98,6 @@ jobs:
         uses: codecov/codecov-action@v4
         # A action do codecov precisa saber onde encontrar o ficheiro,
         # então o working-directory é útil aqui para simplificar o path.
-        working-directory: ./frontend
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           # O caminho agora é relativo ao working-directory.
