@@ -4,28 +4,28 @@
 services:
   # --- Serviço do Banco de Dados PostgreSQL ---
   - name: axonal-db-staging
-    type: pserv         # pserv (Private Service): não acessível pela internet.
+    type: pserv          # pserv (Private Service): não acessível pela internet.
     runtime: postgres    # Utiliza o PostgreSQL gerenciado e otimizado pelo Render.
-    plan: starter      # 'starter' é um plano pago, adequado para produção, com mais recursos.
+    plan: starter        # 'starter' é um plano pago, adequado para produção, com mais recursos.
 
   # --- Serviço da Aplicação Backend (API) ---
   - name: axonal-api-staging
     type: web            # web: terá um URL público e pode escalar.
     plan: starter
     runtime: docker
-    
+
     # Aponta para o Dockerfile do nosso backend.
     dockerfilePath: ./backend/Dockerfile
-    
+
     # Configuração de Auto-Deploy: implanta automaticamente a cada push na branch 'main'.
     autoDeploy: true
     branch: main
-    
+
     # Verificação de Saúde: O Render irá verificar este endpoint para garantir que a aplicação está saudável.
     healthCheck:
       path: /actuator/health
       initialDelaySeconds: 120 # Dá tempo para o Spring Boot iniciar completamente.
-    
+
     # Variáveis de Ambiente e Segredos
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -39,22 +39,22 @@ services:
 
   # --- Serviço da Aplicação Frontend (UI) ---
   - name: axonal-ui-staging
-    type: static         # static: otimizado para servir ficheiros estáticos (HTML, CSS, JS).
+    type: static_site     # CORREÇÃO: 'static_site' é o tipo correto para servir arquivos estáticos.
     plan: starter
-    
+
     # Aponta para o diretório do nosso projeto frontend.
     rootDir: ./frontend
-    
+
     # Comandos de build para a aplicação Vite/React.
     buildCommand: npm install && npm run build
-    
+
     # O diretório onde o 'npm run build' coloca os ficheiros estáticos.
     publishDir: dist
-    
+
     # Configuração de Auto-Deploy para o frontend.
     autoDeploy: true
     branch: main
-    
+
     # Regra de Reescrever (Rewrite Rule): crucial para Single-Page Applications (SPAs).
     # Redireciona todas as requisições para o index.html, permitindo que o React Router lide com a navegação.
     routes:
