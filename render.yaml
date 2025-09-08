@@ -1,13 +1,62 @@
+# render.yaml - Blueprint Completo de Infraestrutura como Código para o AxonAI
+# Esta versão define todos os serviços (DB, Backend, Frontend) para o ambiente de Staging.
 
 services:
-  - name: axonal-ui-staging
-    type: static
+  # --- Serviço do Banco de Dados PostgreSQL ---
+  - name: axonal-db-staging
+    type: pserv      # pserv (Private Service): não acessível pela internet.
+    runtime: postgres  # Utiliza o PostgreSQL gerenciado e otimizado pelo Render.
+    plan: starter      # 'starter' é um plano pago, adequado para produção, com mais recursos.
+
+  # --- Serviço da Aplicação Backend (API) ---
+  - name: axonal-api-staging
+    type: web        # web: terá um URL público e pode escalar.
     plan: starter
-    rootDir: ./frontend
-    buildCommand: npm install && npm run build
-    publishDir: dist
+    runtime: docker
+
+    # Aponta para o Dockerfile do nosso backend.
+    dockerfilePath: ./backend/Dockerfile
+
+    # Configuração de Auto-Deploy: implanta automaticamente a cada push na branch 'main'.
     autoDeploy: true
     branch: main
+
+    # Verificação de Saúde: O Render irá verificar este endpoint para garantir que a aplicação está saudável.
+    healthCheck:
+      path: /actuator/health
+      initialDelaySeconds: 120 # Dá tempo para o Spring Boot iniciar completamente.
+
+    # Variáveis de Ambiente e Segredos
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: staging
+      # Injeta a URL de conexão completa a partir do nosso serviço de base de dados.
+      - key: SPRING_DATASOURCE_URL
+        fromService:
+          type: pserv
+          name: axonal-db-staging
+          property: connectionString
+
+  # --- Serviço da Aplicação Frontend (UI) ---
+  - name: axonal-ui-staging
+    type: static site   
+    plan: starter
+
+    # Aponta para o diretório do nosso projeto frontend.
+    rootDir: ./frontend
+
+    # Comandos de build para a aplicação Vite/React.
+    buildCommand: npm install && npm run build
+
+    # O diretório onde o 'npm run build' coloca os ficheiros estáticos.
+    publishDir: dist
+
+    # Configuração de Auto-Deploy para o frontend.
+    autoDeploy: true
+    branch: main
+
+    # Regra de Reescrever (Rewrite Rule): crucial para Single-Page Applications (SPAs).
+    # Redireciona todas as requisições para o index.html, permitindo que o React Router lide com a navegação.
     routes:
       - type: rewrite
         source: /*
