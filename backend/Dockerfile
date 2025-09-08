@@ -42,4 +42,4 @@ COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 
 # O comando que será executado quando o container iniciar, efetivamente rodando nossa aplicação.
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./entrypoint.sh"]
