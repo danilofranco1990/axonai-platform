@@ -1,26 +1,5 @@
+
 services:
-  - name: axonal-db-staging
-    type: pserv
-    runtime: postgres
-    plan: starter
-  - name: axonal-api-staging
-    type: web
-    plan: starter
-    runtime: docker
-    dockerfilePath: ./backend/Dockerfile
-    autoDeploy: true
-    branch: main
-    healthCheck:
-      path: /actuator/health
-      initialDelaySeconds: 120
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: staging
-      - key: SPRING_DATASOURCE_URL
-        fromService:
-          type: pserv
-          name: axonal-db-staging
-          property: connectionString
   - name: axonal-ui-staging
     type: static
     plan: starter
