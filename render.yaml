@@ -7,7 +7,7 @@ services:
     type: web
     plan: free
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile 
+    dockerfilePath: ./backend/Dockerfile # CORREÇÃO: Aponta para o Dockerfile agora dentro do backend.
     dockerContext: ./backend
     autoDeploy: true
     branch: main
@@ -19,6 +19,8 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: connectionString
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME # ADICIONADO: Força o uso do driver correto.
+        value: org.postgresql.Driver
   - name: axonal-ui-staging
     type: web
     runtime: static
