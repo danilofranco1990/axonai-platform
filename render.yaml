@@ -7,7 +7,7 @@ services:
     type: web
     plan: free
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: Dockerfile
     autoDeploy: true
     branch: main
     healthCheckPath: /actuator/health
