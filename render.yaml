@@ -7,7 +7,7 @@ services:
     type: web
     plan: free
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile # CORREÇÃO: Aponta para o Dockerfile agora dentro do backend.
+    dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     autoDeploy: true
     branch: main
@@ -15,12 +15,19 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
+      # CORREÇÃO: Construção explícita da URL no formato JDBC.
+      # Usamos as propriedades 'host', 'port' e 'databaseName' para montar a string correta.
       - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://${axonal-db-staging.host}:${axonal-db-staging.port}/${axonal-db-staging.databaseName}
+      # CORREÇÃO: Fornece o utilizador e a senha como variáveis separadas.
+      - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
-          property: connectionString
-      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME # ADICIONADO: Força o uso do driver correto.
-        value: org.postgresql.Driver
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: axonal-db-staging
+          property: password
   - name: axonal-ui-staging
     type: web
     runtime: static
