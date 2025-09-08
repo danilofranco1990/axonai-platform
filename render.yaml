@@ -15,26 +15,20 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: axonal-db-staging
+          property: internalConnectionString # Chave para a URL de conexão interna
+
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
           property: user
+
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
           name: axonal-db-staging
           property: password
-      - key: SPRING_DATASOURCE_HOST
-        fromDatabase:
-          name: axonal-db-staging
-          property: host
-      - key: SPRING_DATASOURCE_PORT
-        fromDatabase:
-          name: axonal-db-staging
-          property: port
-      - key: SPRING_DATASOURCE_DB_NAME
-        fromDatabase:
-          name: axonal-db-staging
-          property: database
   - name: axonal-ui-staging
     type: web
     runtime: static
