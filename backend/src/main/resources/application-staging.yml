@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    hibernate:
+      # 'validate' instrui o Hibernate a verificar se o esquema da base de dados
+      # corresponde às entidades da aplicação no arranque, sem fazer alterações.
+      # É uma configuração segura para ambientes de produção e staging.
+      ddl-auto: validate
