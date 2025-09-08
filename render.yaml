@@ -12,19 +12,26 @@ services:
     autoDeploy: true
     branch: main
     healthCheckPath: /actuator/health
+    
+    startCommand: |
+      echo "--- DIAGNÓSTICO DAS VARIÁVEIS DE AMBIENTE ---"
+      echo "SPRING_DATASOURCE_URL=[$SPRING_DATASOURCE_URL]"
+      echo "SPRING_DATASOURCE_USERNAME=[$SPRING_DATASOURCE_USERNAME]"
+      echo "SPRING_DATASOURCE_HOST=[$SPRING_DATASOURCE_HOST]"
+      echo "--- FIM DO DIAGNÓSTICO ---"
+      java -jar app.jar
+
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: axonal-db-staging
-          property: internalConnectionString # Chave para a URL de conexão interna
-
+          property: internalConnectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
           property: user
-
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
           name: axonal-db-staging
