@@ -1,4 +1,10 @@
 spring:
+  datasource:
+    # Nota: usamos localhost aqui para quando rodamos a app via IDE.
+    # O Docker Compose irá sobrescrever esta URL.
+    url: jdbc:postgresql://localhost:5432/axonaldb
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       # 'validate' instrui o Hibernate a verificar se o esquema da base de dados
