@@ -8,6 +8,7 @@ services:
     plan: free
     runtime: docker
     dockerfilePath: Dockerfile
+    dockerContext: ./backend 
     autoDeploy: true
     branch: main
     healthCheckPath: /actuator/health
