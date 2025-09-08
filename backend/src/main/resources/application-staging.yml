@@ -1,11 +1,7 @@
 spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
   jpa:
     hibernate:
-      # 'validate' instrui o Hibernate a verificar se o esquema da base de dados
-      # corresponde às entidades da aplicação no arranque, sem fazer alterações.
-      # É uma configuração segura para ambientes de produção e staging.
       ddl-auto: validate
-    # ADICIONADO: Define explicitamente o dialeto do PostgreSQL para o Hibernate.
-    # Isto remove a necessidade de auto-detecção, que pode ser falível em ambientes de cloud.
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
