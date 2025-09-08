@@ -10,9 +10,7 @@ services:
     dockerfilePath: ./backend/Dockerfile
     autoDeploy: true
     branch: main
-    healthCheck:
-      path: /actuator/health
-      initialDelaySeconds: 120
+    healthCheckPath: /actuator/health 
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
@@ -22,15 +20,16 @@ services:
           name: axonal-db-staging
           property: connectionString
   - name: axonal-ui-staging
-    type: web # CORREÇÃO: O schema define o tipo como "web" para serviços estáticos.
-    runtime: static # CORREÇÃO: O schema define o runtime como "static".
+    type: web
+    runtime: static
     plan: starter
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist # CORREÇÃO: O schema especifica "staticPublishPath".
+    staticPublishPath: dist
     autoDeploy: true
     branch: main
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+
