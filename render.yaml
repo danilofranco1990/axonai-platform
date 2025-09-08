@@ -1,11 +1,11 @@
 databases:
   - name: axonal-db-staging
-    plan: free # ALTERADO: "starter" para "free" para usar o nível gratuito.
+    plan: free
 
 services:
   - name: axonal-api-staging
     type: web
-    plan: free # ALTERADO: "starter" para "free" para usar o nível gratuito.
+    plan: free
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     autoDeploy: true
@@ -21,7 +21,6 @@ services:
   - name: axonal-ui-staging
     type: web
     runtime: static
-    plan: free # ALTERADO: "starter" para "free" para usar o nível gratuito.
     rootDir: ./frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
