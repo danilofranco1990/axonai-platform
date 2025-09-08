@@ -4,13 +4,13 @@
 services:
   # --- Serviço do Banco de Dados PostgreSQL ---
   - name: axonal-db-staging
-    type: pserv          # pserv (Private Service): não acessível pela internet.
-    runtime: postgres    # Utiliza o PostgreSQL gerenciado e otimizado pelo Render.
-    plan: starter        # 'starter' é um plano pago, adequado para produção, com mais recursos.
+    type: pserv      # pserv (Private Service): não acessível pela internet.
+    runtime: postgres  # Utiliza o PostgreSQL gerenciado e otimizado pelo Render.
+    plan: starter      # 'starter' é um plano pago, adequado para produção, com mais recursos.
 
   # --- Serviço da Aplicação Backend (API) ---
   - name: axonal-api-staging
-    type: web            # web: terá um URL público e pode escalar.
+    type: web        # web: terá um URL público e pode escalar.
     plan: starter
     runtime: docker
 
@@ -39,7 +39,7 @@ services:
 
   # --- Serviço da Aplicação Frontend (UI) ---
   - name: axonal-ui-staging
-    type: static_site     # CORREÇÃO: 'static_site' é o tipo correto para servir arquivos estáticos.
+    type: static    
     plan: starter
 
     # Aponta para o diretório do nosso projeto frontend.
