@@ -22,12 +22,12 @@ services:
           name: axonal-db-staging
           property: connectionString
   - name: axonal-ui-staging
-    type: static site
-    env: static # ADICIONADO: Propriedade presente no exemplo da documentação.
+    type: web # CORREÇÃO: O schema define o tipo como "web" para serviços estáticos.
+    runtime: static # CORREÇÃO: O schema define o runtime como "static".
     plan: starter
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishPath: dist # CORREÇÃO: O schema especifica "staticPublishPath".
     autoDeploy: true
     branch: main
     routes:
