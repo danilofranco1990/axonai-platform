@@ -4,7 +4,7 @@ databases:
 
 services:
   - name: axonal-api-staging
-    type: web    
+    type: web
     plan: free
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
@@ -12,14 +12,10 @@ services:
     autoDeploy: true
     branch: main
     healthCheckPath: /actuator/health
-
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: axonal-db-staging
-          property: connectionString
+      # As credenciais são mantidas para o Spring Boot usar
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
@@ -28,6 +24,19 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: password
+      # Componentes limpos para construir a URL no Dockerfile
+      - key: DB_HOST
+        fromDatabase:
+          name: axonal-db-staging
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: axonal-db-staging
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: axonal-db-staging
+          property: database
   - name: axonal-ui-staging
     type: web
     runtime: static
@@ -40,4 +49,3 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-
