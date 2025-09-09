@@ -4,9 +4,7 @@ databases:
 
 services:
   - name: axonal-api-staging
-    type: web
-    annotations:
-      render.com/force-update: "2025-09-08T16:13:00"    
+    type: web    
     plan: free
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
