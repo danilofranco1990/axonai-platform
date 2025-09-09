@@ -8,7 +8,7 @@ name: Pull Request Validation
 on:
   # Executa para todo pull request que tem como alvo a branch 'main'.
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 # --------------------------------------------------------------------------
 # JOBS
