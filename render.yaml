@@ -1,6 +1,8 @@
 databases:
   - name: axonal-db-staging
     plan: free
+    # Banco exclusivo para staging, não compartilha com produção
+    # Opcional: configurar backup/snapshot de produção para popular staging
 
 services:
   - name: axonal-api-staging
@@ -10,8 +12,8 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     autoDeploy: true
-    branch: main
-    healthCheckPath: /actuator/health
+    branch: develop   # staging sempre vem da develop (pré-merge)
+    healthCheckPath: /actuator/health/liveness
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
@@ -27,15 +29,21 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: none    # evita alterações automáticas no schema
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: "never"  # não expõe detalhes sensíveis do health check
 
   - name: axonal-ui-staging
     type: web
     runtime: static
     rootDir: ./frontend
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     staticPublishPath: dist
     autoDeploy: true
-    branch: main
+    branch: develop   # mesmo padrão de branch para staging
     routes:
       - type: rewrite
         source: /*
