@@ -35,8 +35,10 @@ services:
         value: "never"  # não expõe detalhes sensíveis do health check
 
   - name: axonal-ui-staging
-    type: static_site
+    type: web
     runtime: static
+    type: web
+    runtime: static_site
     rootDir: ./frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
