@@ -19,14 +19,6 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: axonal-db-staging
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: axonal-db-staging
-          property: password
           
   - name: axonal-ui-staging
     type: web
