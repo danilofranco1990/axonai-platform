@@ -19,7 +19,7 @@ services:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: axonal-db-staging
-          property: internalConnectionString
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
