@@ -36,7 +36,7 @@ services:
 
   - name: axonal-ui-staging
     type: web
-    runtime: static
+    runtime: static_site
     rootDir: ./frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
