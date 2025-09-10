@@ -1,5 +1,7 @@
 package com.axonai.platform.domain.model.vo;
 
+import com.axonai.platform.domain.exception.InvalidEmailFormatException;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -17,7 +19,7 @@ public record Email(String value) {
 
         // 2. Validação: A verificação agora é feita no valor canônico.
         if (canonicalEmail.isBlank() || !EMAIL_PATTERN.matcher(canonicalEmail).matches()) {
-            throw new IllegalArgumentException("Invalid email format: " + value);
+            throw new InvalidEmailFormatException("Invalid email format: " + value);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.axonai.platform.domain.model.aggregate;
 
+import com.axonai.platform.domain.exception.InvalidUserStatusTransitionException;
 import com.axonai.platform.domain.exception.UserDomainException;
+import com.axonai.platform.domain.exception.UserInactiveException;
 import com.axonai.platform.domain.model.enums.UserStatus;
 import com.axonai.platform.domain.model.vo.Email;
 import com.axonai.platform.domain.model.vo.UserId;
@@ -39,7 +41,7 @@ public class UserAggregate {
     public void changePassword(String newHashedPassword) {
         if (this.status == UserStatus.INACTIVE) {
             // Refatorado para usar a exceção de domínio
-            throw new UserDomainException("Não é possível alterar a senha de um usuário inativo.");
+            throw new UserInactiveException("Não é possível alterar a senha de um usuário inativo.");
         }
         this.hashedPassword = Objects.requireNonNull(newHashedPassword, "A nova senha com hash não pode ser nula.");
     }
@@ -47,7 +49,7 @@ public class UserAggregate {
     public void activate() {
         if (this.status != UserStatus.PENDING_VERIFICATION) {
             // Refatorado para usar a exceção de domínio
-            throw new UserDomainException("O usuário não pode ser ativado a partir do status atual: " + this.status);
+            throw new InvalidUserStatusTransitionException("O usuário não pode ser ativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.ACTIVE;
     }
@@ -55,7 +57,7 @@ public class UserAggregate {
     public void deactivate() {
         if (this.status != UserStatus.ACTIVE) {
             // Refatorado para usar a exceção de domínio
-            throw new UserDomainException("O usuário não pode ser desativado a partir do status atual: " + this.status);
+            throw new InvalidUserStatusTransitionException("O usuário não pode ser desativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.INACTIVE;
     }
