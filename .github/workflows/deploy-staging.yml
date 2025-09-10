@@ -1,0 +1,48 @@
+# Nome do Workflow
+name: Deploy to Staging
+
+# --------------------------------------------------------------------------
+# GATILHO (TRIGGER)
+# --------------------------------------------------------------------------
+# Define que este workflow será executado a cada push na branch 'develop'.
+on:
+  push:
+    branches: [ develop ]
+
+# --------------------------------------------------------------------------
+# JOBS
+# --------------------------------------------------------------------------
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Passo 1: Faz o checkout do código do repositório.
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Passo 2: Login no GitHub Container Registry (GHCR).
+      # Precisamos de estar autenticados para enviar a nossa imagem Docker.
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      # Passo 3: Construir e enviar a imagem Docker do backend.
+      # A tag da imagem incluirá o SHA do commit para rastreabilidade.
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/${{ github.repository }}/axonal-api:${{ github.sha }}
+
+      # Passo 4 (OPCIONAL, MAS RECOMENDADO): Acionar o Deploy Hook do Render.
+      # Embora o Render já tenha o auto-deploy, acionar o hook garante um deploy imediato.
+      # Você precisa de criar um 'Deploy Hook' na UI do seu Web Service no Render
+      # e adicioná-lo como um segredo no GitHub chamado RENDER_DEPLOY_HOOK_STAGING.
+      - name: Trigger Render Deploy Hook
+        if: success() # Só executa se os passos anteriores tiverem sucesso
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_STAGING }}

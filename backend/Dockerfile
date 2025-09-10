@@ -39,8 +39,8 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Expõe a porta em que a aplicação Spring Boot roda por padrão para a rede do Docker.
+
 EXPOSE 8080
-COPY entrypoint.sh .
-RUN chmod +x ./entrypoint.sh
+
 # O comando que será executado quando o container iniciar, efetivamente rodando nossa aplicação.
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

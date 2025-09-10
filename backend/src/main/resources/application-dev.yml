@@ -1,11 +1,12 @@
 # Configurações para o ambiente de desenvolvimento (dev)
 spring:
   datasource:
-    # Nota: usamos localhost aqui para quando rodamos a app via IDE.
-    # O Docker Compose irá sobrescrever esta URL.
     url: jdbc:postgresql://localhost:5432/axonaldb
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
   jpa:
     hibernate:
       ddl-auto: validate

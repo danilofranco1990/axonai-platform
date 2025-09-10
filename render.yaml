@@ -5,6 +5,7 @@ databases:
     # Opcional: configurar backup/snapshot de produção para popular staging
 
 services:
+  
   - name: axonal-api-staging
     type: web
     plan: free
@@ -17,10 +18,22 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
-      - key: SPRING_DATASOURCE_URL
+
+      # partes separadas para montar a JDBC URL no application-staging.yml
+      - key: DB_HOST
         fromDatabase:
           name: axonal-db-staging
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: axonal-db-staging
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: axonal-db-staging
+          property: database
+
+      # usuário e senha continuam iguais
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
@@ -29,6 +42,7 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: password
+
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: none    # evita alterações automáticas no schema
       - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
