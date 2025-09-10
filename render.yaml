@@ -22,14 +22,6 @@ services:
         fromDatabase:
           name: axonal-db-staging
           property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: axonal-db-staging
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: axonal-db-staging
-          property: password
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: none    # evita alterações automáticas no schema
       - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
