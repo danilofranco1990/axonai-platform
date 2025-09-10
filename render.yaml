@@ -19,7 +19,9 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${axonal-db-staging.host}:${axonal-db-staging.port}/${axonal-db-staging.databaseName}
+        fromDatabase:
+          name: axonal-db-staging
+          property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: axonal-db-staging
