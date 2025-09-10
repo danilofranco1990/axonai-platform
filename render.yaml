@@ -13,21 +13,42 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     autoDeploy: true
-    branch: develop   
+    branch: develop   # staging sempre vem da develop (pré-merge)
     healthCheckPath: /actuator/health/liveness
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: staging
-      - key: SPRING_DATASOURCE_URL
+
+      # partes separadas para montar a JDBC URL no application-staging.yml
+      - key: DB_HOST
         fromDatabase:
           name: axonal-db-staging
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: axonal-db-staging
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: axonal-db-staging
+          property: database
+
+      # usuário e senha continuam iguais
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: axonal-db-staging
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: axonal-db-staging
+          property: password
+
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: none    
+        value: none    # evita alterações automáticas no schema
       - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
         value: health,info
       - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
-        value: "never"  
+        value: "never"  # não expõe detalhes sensíveis do health check
 
   - name: axonal-ui-staging
     type: web
@@ -36,7 +57,7 @@ services:
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     autoDeploy: true
-    branch: develop  
+    branch: develop   # mesmo padrão de branch para staging
     routes:
       - type: rewrite
         source: /*
