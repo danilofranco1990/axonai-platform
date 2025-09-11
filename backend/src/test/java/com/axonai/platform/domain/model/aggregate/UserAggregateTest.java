@@ -1,5 +1,9 @@
 package com.axonai.platform.domain.model.aggregate;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import com.axonai.platform.domain.exception.InvalidUserStatusTransitionException;
 import com.axonai.platform.domain.exception.UserInactiveException;
 import com.axonai.platform.domain.exception.UserNotVerifiedException;
@@ -7,10 +11,6 @@ import com.axonai.platform.domain.model.enums.UserStatus;
 import com.axonai.platform.domain.model.vo.Email;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserAggregateTest {
 
@@ -55,7 +55,8 @@ class UserAggregateTest {
         // When / Then
         assertThatThrownBy(user::activate)
                 .isInstanceOf(InvalidUserStatusTransitionException.class)
-                .hasMessageContaining("O usuário não pode ser ativado a partir do status atual: ACTIVE");
+                .hasMessageContaining(
+                        "O usuário não pode ser ativado a partir do status atual: ACTIVE");
     }
 
     @Test
@@ -76,12 +77,15 @@ class UserAggregateTest {
     @DisplayName("Deve lançar exceção ao tentar desativar um usuário que não está ACTIVE")
     void shouldThrowExceptionWhenDeactivatingANonActiveUser() {
         // Given
-        UserAggregate user = UserAggregate.register(new Email("test@example.com"), "hashed"); // Status is PENDING
+        UserAggregate user =
+                UserAggregate.register(
+                        new Email("test@example.com"), "hashed"); // Status is PENDING
 
         // When / Then
         assertThatThrownBy(user::deactivate)
                 .isInstanceOf(InvalidUserStatusTransitionException.class)
-                .hasMessageContaining("O usuário não pode ser desativado a partir do status atual: PENDING_VERIFICATION");
+                .hasMessageContaining(
+                        "O usuário não pode ser desativado a partir do status atual: PENDING_VERIFICATION");
     }
 
     @Test
@@ -143,11 +147,14 @@ class UserAggregateTest {
     @DisplayName("Deve lançar UserNotVerifiedException quando o usuário está PENDING_VERIFICATION")
     void ensureIsActive_shouldThrowUserNotVerifiedException_whenUserIsPending() {
         // Given
-        UserAggregate user = UserAggregate.register(new Email("test@example.com"), "hashed"); // Status é PENDING_VERIFICATION
+        UserAggregate user =
+                UserAggregate.register(
+                        new Email("test@example.com"), "hashed"); // Status é PENDING_VERIFICATION
 
         // When / Then
         assertThatThrownBy(user::ensureIsActive)
                 .isInstanceOf(UserNotVerifiedException.class)
-                .hasMessage("A operação não pode ser executada pois o usuário ainda não verificou a sua conta.");
+                .hasMessage(
+                        "A operação não pode ser executada pois o usuário ainda não verificou a sua conta.");
     }
 }
