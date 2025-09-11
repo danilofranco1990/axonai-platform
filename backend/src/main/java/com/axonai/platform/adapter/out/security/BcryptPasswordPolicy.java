@@ -6,8 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * Adaptador que implementa a porta PasswordPolicy utilizando a biblioteca
- * Spring Security com o algoritmo Bcrypt.
+ * Adaptador que implementa a porta PasswordPolicy utilizando a biblioteca Spring Security com o
+ * algoritmo Bcrypt.
  */
 @Component
 public class BcryptPasswordPolicy implements PasswordPolicy {
