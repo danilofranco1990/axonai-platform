@@ -12,15 +12,17 @@ public record Email(String value) {
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
     );
 
-    public Email {
-        // 1. Canonicalização: O valor é normalizado para minúsculas ANTES de qualquer validação.
-        //    Isso garante que a validação e o estado armazenado sejam consistentes.
+    public Email(String value) {
+        // 1. Canonicalização: O valor é normalizado para minúsculas.
         String canonicalEmail = Objects.requireNonNull(value, "Email value cannot be null.").trim().toLowerCase();
 
-        // 2. Validação: A verificação agora é feita no valor canônico.
+        // 2. Validação: A verificação é feita no valor canônico.
         if (canonicalEmail.isBlank() || !EMAIL_PATTERN.matcher(canonicalEmail).matches()) {
             throw new InvalidEmailFormatException("Invalid email format: " + value);
         }
+
+        // 3. Atribuição: O valor canônico (e não o original) é atribuído ao campo do record.
+        this.value = canonicalEmail;
     }
 
     /**

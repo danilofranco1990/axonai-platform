@@ -3,10 +3,12 @@ package com.axonai.platform.domain.model.aggregate;
 import com.axonai.platform.domain.exception.InvalidUserStatusTransitionException;
 import com.axonai.platform.domain.exception.UserDomainException;
 import com.axonai.platform.domain.exception.UserInactiveException;
+import com.axonai.platform.domain.exception.UserNotVerifiedException;
 import com.axonai.platform.domain.model.enums.UserStatus;
 import com.axonai.platform.domain.model.vo.Email;
 import com.axonai.platform.domain.model.vo.UserId;
 
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -21,12 +23,17 @@ public class UserAggregate {
     private final Email email;
     private String hashedPassword;
     private UserStatus status;
+    private final Instant createdAt;
+    private Instant updatedAt;
+    private Long version;
 
     private UserAggregate(UserId userId, Email email, String hashedPassword, UserStatus status) {
         this.userId = Objects.requireNonNull(userId, "User ID não pode ser nulo.");
         this.email = Objects.requireNonNull(email, "Email não pode ser nulo.");
         this.hashedPassword = Objects.requireNonNull(hashedPassword, "Senha com hash não pode ser nula.");
         this.status = Objects.requireNonNull(status, "Status do usuário não pode ser nulo.");
+        this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
     }
 
     public static UserAggregate register(Email email, String hashedPassword) {
@@ -40,28 +47,47 @@ public class UserAggregate {
 
     public void changePassword(String newHashedPassword) {
         if (this.status == UserStatus.INACTIVE) {
-            // Refatorado para usar a exceção de domínio
             throw new UserInactiveException("Não é possível alterar a senha de um usuário inativo.");
         }
         this.hashedPassword = Objects.requireNonNull(newHashedPassword, "A nova senha com hash não pode ser nula.");
+        this.touch();
     }
 
     public void activate() {
         if (this.status != UserStatus.PENDING_VERIFICATION) {
-            // Refatorado para usar a exceção de domínio
             throw new InvalidUserStatusTransitionException("O usuário não pode ser ativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.ACTIVE;
+        this.touch(); // Atualiza o timestamp
     }
 
     public void deactivate() {
         if (this.status != UserStatus.ACTIVE) {
-            // Refatorado para usar a exceção de domínio
             throw new InvalidUserStatusTransitionException("O usuário não pode ser desativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.INACTIVE;
+        this.touch(); // Atualiza o timestamp
     }
 
+    /**
+     * Garante que o usuário está no estado ACTIVE.
+     * Lança uma exceção de domínio específica caso contrário.
+     * Este é um "guard method" para ser usado por serviços de aplicação.
+     */
+    public void ensureIsActive() {
+        if (this.status == UserStatus.INACTIVE) {
+            throw new UserInactiveException("A operação não pode ser executada pois o usuário está inativo.");
+        }
+        if (this.status == UserStatus.PENDING_VERIFICATION) {
+            throw new UserNotVerifiedException("A operação não pode ser executada pois o usuário ainda não verificou a sua conta.");
+        }
+        // Se o status for ACTIVE, o método simplesmente retorna.
+    }
+
+    // Método privado para centralizar a atualização do timestamp
+    private void touch() {
+        this.updatedAt = Instant.now();
+    }
 
     // --- Getters ---
 
@@ -79,6 +105,18 @@ public class UserAggregate {
 
     public UserStatus getStatus() {
         return status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     // --- Sobrescritas para comparação de identidade ---
