@@ -25,10 +25,12 @@ public class UserAggregate {
     private Instant updatedAt;
     private Long version;
 
-    private UserAggregate(UserId userId, Email email, HashedPassword hashedPassword, UserStatus status) {
+    private UserAggregate(
+            UserId userId, Email email, HashedPassword hashedPassword, UserStatus status) {
         this.userId = Objects.requireNonNull(userId, "User ID não pode ser nulo.");
         this.email = Objects.requireNonNull(email, "Email não pode ser nulo.");
-        this.hashedPassword = Objects.requireNonNull(hashedPassword, "Senha com hash não pode ser nula.");
+        this.hashedPassword =
+                Objects.requireNonNull(hashedPassword, "Senha com hash não pode ser nula.");
         this.status = Objects.requireNonNull(status, "Status do usuário não pode ser nulo.");
         this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
@@ -44,7 +46,9 @@ public class UserAggregate {
             throw new UserInactiveException(
                     "Não é possível alterar a senha de um usuário inativo.");
         }
-        this.hashedPassword = Objects.requireNonNull(newHashedPassword, "A nova senha com hash não pode ser nula.");
+        this.hashedPassword =
+                Objects.requireNonNull(
+                        newHashedPassword, "A nova senha com hash não pode ser nula.");
         this.touch();
     }
 

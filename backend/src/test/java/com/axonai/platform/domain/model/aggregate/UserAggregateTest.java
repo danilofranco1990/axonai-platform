@@ -85,8 +85,6 @@ class UserAggregateTest {
         assertThat(user.getStatus()).isEqualTo(UserStatus.INACTIVE);
     }
 
-
-
     @Test
     @DisplayName("Deve lançar exceção ao tentar desativar um usuário que não está ACTIVE")
     void shouldThrowExceptionWhenDeactivatingANonActiveUser() {
