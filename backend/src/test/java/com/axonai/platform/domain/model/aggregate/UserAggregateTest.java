@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
 
 class UserAggregateTest {
 
-    // Usar constantes para dados de teste melhora a legibilidade e a manutenção.
-    // Estes são hashes Bcrypt estruturalmente válidos.
     private static final HashedPassword VALID_HASH_1 =
             new HashedPassword("$2a$10$h.dl5J86rGH7I8Glpde9v.wS5KGYs.I2tcm2J1vS9y5.f6vdeIeS2");
     private static final HashedPassword VALID_HASH_2 =
@@ -33,10 +31,8 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve registrar um novo usuário com status PENDING_VERIFICATION")
     void shouldRegisterNewUserWithPendingStatus() {
-        // When
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
 
-        // Then
         assertThat(user).isNotNull();
         assertThat(user.getUserId()).isNotNull();
         assertThat(user.getEmail()).isEqualTo(testEmail);
@@ -47,24 +43,19 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve ativar um usuário com status PENDING_VERIFICATION")
     void shouldActivateUserWhenStatusIsPending() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
 
-        // When
         user.activate();
 
-        // Then
         assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar ativar um usuário que já está ACTIVE")
     void shouldThrowExceptionWhenActivatingAnActiveUser() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
-        user.activate(); // Status is now ACTIVE
+        user.activate();
 
-        // When / Then
         assertThatThrownBy(user::activate)
                 .isInstanceOf(InvalidUserStatusTransitionException.class)
                 .hasMessageContaining(
@@ -74,24 +65,19 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve desativar um usuário com status ACTIVE")
     void shouldDeactivateUserWhenStatusIsActive() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
-        user.activate(); // Status is now ACTIVE
+        user.activate();
 
-        // When
         user.deactivate();
 
-        // Then
         assertThat(user.getStatus()).isEqualTo(UserStatus.INACTIVE);
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar desativar um usuário que não está ACTIVE")
     void shouldThrowExceptionWhenDeactivatingANonActiveUser() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1); // Status is PENDING
 
-        // When / Then
         assertThatThrownBy(user::deactivate)
                 .isInstanceOf(InvalidUserStatusTransitionException.class)
                 .hasMessageContaining(
@@ -101,26 +87,21 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve permitir a troca de senha para um usuário ACTIVE")
     void shouldAllowPasswordChangeForActiveUser() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
         user.activate();
 
-        // When
         user.changePassword(VALID_HASH_2);
 
-        // Then
         assertThat(user.getHashedPassword()).isEqualTo(VALID_HASH_2);
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar trocar a senha de um usuário INACTIVE")
     void shouldThrowExceptionWhenChangingPasswordForInactiveUser() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
         user.activate();
-        user.deactivate(); // Status is now INACTIVE
+        user.deactivate();
 
-        // When / Then
         assertThatThrownBy(() -> user.changePassword(VALID_HASH_2))
                 .isInstanceOf(UserInactiveException.class)
                 .hasMessage("Não é possível alterar a senha de um usuário inativo.");
@@ -129,23 +110,19 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve passar na verificação de estado quando o usuário está ACTIVE")
     void ensureIsActive_shouldPass_whenUserIsActive() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
-        user.activate(); // Status é ACTIVE
+        user.activate();
 
-        // When / Then
         assertDoesNotThrow(user::ensureIsActive);
     }
 
     @Test
     @DisplayName("Deve lançar UserInactiveException quando o usuário está INACTIVE")
     void ensureIsActive_shouldThrowUserInactiveException_whenUserIsInactive() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
         user.activate();
-        user.deactivate(); // Status é INACTIVE
+        user.deactivate();
 
-        // When / Then
         assertThatThrownBy(user::ensureIsActive)
                 .isInstanceOf(UserInactiveException.class)
                 .hasMessage("A operação não pode ser executada pois o usuário está inativo.");
@@ -154,10 +131,8 @@ class UserAggregateTest {
     @Test
     @DisplayName("Deve lançar UserNotVerifiedException quando o usuário está PENDING_VERIFICATION")
     void ensureIsActive_shouldThrowUserNotVerifiedException_whenUserIsPending() {
-        // Given
         UserAggregate user = UserAggregate.register(testEmail, VALID_HASH_1);
 
-        // When / Then
         assertThatThrownBy(user::ensureIsActive)
                 .isInstanceOf(UserNotVerifiedException.class)
                 .hasMessage(

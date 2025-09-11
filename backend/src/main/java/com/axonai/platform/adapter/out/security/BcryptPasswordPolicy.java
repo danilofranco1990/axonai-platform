@@ -14,7 +14,6 @@ public class BcryptPasswordPolicy implements PasswordPolicy {
 
     private final PasswordEncoder passwordEncoder;
 
-    // Injetamos a dependência do PasswordEncoder configurado no SecurityConfig
     public BcryptPasswordPolicy(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
@@ -22,7 +21,6 @@ public class BcryptPasswordPolicy implements PasswordPolicy {
     @Override
     public HashedPassword hash(String rawPassword) {
         String encodedPassword = this.passwordEncoder.encode(rawPassword);
-        // O construtor do HashedPassword já valida o formato, adicionando uma camada de segurança.
         return new HashedPassword(encodedPassword);
     }
 

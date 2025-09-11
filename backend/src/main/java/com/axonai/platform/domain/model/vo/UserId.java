@@ -2,12 +2,16 @@ package com.axonai.platform.domain.model.vo;
 
 import java.util.UUID;
 
-// A interface Serializable foi removida por ser uma dependência técnica que raramente é a melhor
-// escolha.
+/**
+ * Representa o identificador único de um usuário no sistema. Utiliza UUID para garantir unicidade
+ * global.
+ *
+ * <p>Este record é imutável e encapsula a lógica de criação e validação do ID do usuário,
+ * garantindo que apenas IDs válidos sejam instanciados.
+ */
 public record UserId(UUID value) {
     public UserId {
         if (value == null) {
-            // A mensagem é mais precisa ao nomear o parâmetro específico.
             throw new IllegalArgumentException("UUID value for UserId cannot be null.");
         }
     }
@@ -28,16 +32,13 @@ public record UserId(UUID value) {
         try {
             return new UserId(UUID.fromString(uuid));
         } catch (IllegalArgumentException e) {
-            // Encapsula a exceção original para fornecer contexto completo de depuração.
             throw new IllegalArgumentException("Invalid UUID format for User ID.", e);
         }
     }
 
     @Override
     public String toString() {
-        // A implementação padrão do record é "UserId[value=...]",
-        // que é útil para depuração, mas retornar a string pura do UUID
-        // é frequentemente mais prático para logs e serialização.
+
         return value.toString();
     }
 }
