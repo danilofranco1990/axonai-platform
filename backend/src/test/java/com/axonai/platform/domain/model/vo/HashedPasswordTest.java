@@ -15,19 +15,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 @DisplayName("Value Object - HashedPassword")
 class HashedPasswordTest {
 
-    // Exemplo de um hash Bcrypt válido para ser usado nos testes.
     private final String VALID_BCRYPT_HASH =
             "$2a$12$R9h/cIPz0e.uRE2rf46gkuEt2i7./kYen172f2Icl3s1i8qtL5i3e";
 
     @Test
     @DisplayName("Deve criar instância com sucesso para um hash Bcrypt válido")
     void shouldCreateInstanceSuccessfullyForValidBcryptHash() {
-        // Ação e Verificação
-        // O construtor não deve lançar exceção para um valor válido.
         HashedPassword hashedPassword =
                 assertDoesNotThrow(() -> new HashedPassword(VALID_BCRYPT_HASH));
 
-        // Verifica se o valor foi armazenado corretamente.
         assertNotNull(hashedPassword);
         assertEquals(VALID_BCRYPT_HASH, hashedPassword.value());
     }
@@ -35,8 +31,6 @@ class HashedPasswordTest {
     @Test
     @DisplayName("Deve lançar NullPointerException quando o valor do hash for nulo")
     void shouldThrowNullPointerExceptionWhenHashValueIsNull() {
-        // Ação e Verificação
-        // A validação `Objects.requireNonNull` deve lançar NullPointerException.
         var exception = assertThrows(NullPointerException.class, () -> new HashedPassword(null));
 
         assertEquals("O valor da senha com hash não pode ser nulo.", exception.getMessage());
@@ -56,8 +50,6 @@ class HashedPasswordTest {
             })
     @DisplayName("Deve lançar UserDomainException para formatos de hash inválidos")
     void shouldThrowUserDomainExceptionForInvalidHashFormats(String invalidHash) {
-        // Ação e Verificação
-        // A validação com a expressão regular deve falhar.
         var exception =
                 assertThrows(UserDomainException.class, () -> new HashedPassword(invalidHash));
 
@@ -67,13 +59,10 @@ class HashedPasswordTest {
     @Test
     @DisplayName("toString() deve retornar um valor redigido para segurança")
     void toStringShouldReturnRedactedValueForSecurity() {
-        // Preparação
         HashedPassword hashedPassword = new HashedPassword(VALID_BCRYPT_HASH);
 
-        // Ação
         String toStringOutput = hashedPassword.toString();
 
-        // Verificação
         assertEquals("HashedPassword[value=REDACTED]", toStringOutput);
         assertFalse(
                 toStringOutput.contains(VALID_BCRYPT_HASH),

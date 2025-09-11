@@ -58,7 +58,7 @@ public class UserAggregate {
                     "O usuário não pode ser ativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.ACTIVE;
-        this.touch(); // Atualiza o timestamp
+        this.touch();
     }
 
     public void deactivate() {
@@ -67,7 +67,7 @@ public class UserAggregate {
                     "O usuário não pode ser desativado a partir do status atual: " + this.status);
         }
         this.status = UserStatus.INACTIVE;
-        this.touch(); // Atualiza o timestamp
+        this.touch();
     }
 
     /**
@@ -83,7 +83,6 @@ public class UserAggregate {
             throw new UserNotVerifiedException(
                     "A operação não pode ser executada pois o usuário ainda não verificou a sua conta.");
         }
-        // Se o status for ACTIVE, o método simplesmente retorna.
     }
 
     // Método privado para centralizar a atualização do timestamp
@@ -101,7 +100,7 @@ public class UserAggregate {
         return email;
     }
 
-    public HashedPassword getHashedPassword() { // MUDANÇA AQUI
+    public HashedPassword getHashedPassword() {
         return hashedPassword;
     }
 
