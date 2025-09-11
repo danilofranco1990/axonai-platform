@@ -1,10 +1,10 @@
 package com.axonai.platform.domain.model.vo;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.axonai.platform.domain.exception.InvalidEmailFormatException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testes para o Value Object Email")
 class EmailTest {

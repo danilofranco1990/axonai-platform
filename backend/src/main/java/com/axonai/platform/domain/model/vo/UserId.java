@@ -2,7 +2,8 @@ package com.axonai.platform.domain.model.vo;
 
 import java.util.UUID;
 
-// A interface Serializable foi removida por ser uma dependência técnica que raramente é a melhor escolha.
+// A interface Serializable foi removida por ser uma dependência técnica que raramente é a melhor
+// escolha.
 public record UserId(UUID value) {
     public UserId {
         if (value == null) {
@@ -11,16 +12,14 @@ public record UserId(UUID value) {
         }
     }
 
-    /**
-     * Gera um novo UserId único.
-     */
+    /** Gera um novo UserId único. */
     public static UserId generate() {
         return new UserId(UUID.randomUUID());
     }
 
     /**
-     * Cria um UserId a partir de uma representação de String.
-     * Essencial para reconstruir o objeto a partir de bancos de dados ou DTOs (Data Transfer Objects).
+     * Cria um UserId a partir de uma representação de String. Essencial para reconstruir o objeto a
+     * partir de bancos de dados ou DTOs (Data Transfer Objects).
      */
     public static UserId fromString(String uuid) {
         if (uuid == null || uuid.isBlank()) {
