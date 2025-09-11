@@ -2,6 +2,7 @@ package com.axonai.platform.domain.model.aggregate;
 
 import com.axonai.platform.domain.exception.InvalidUserStatusTransitionException;
 import com.axonai.platform.domain.exception.UserInactiveException;
+import com.axonai.platform.domain.exception.UserNotVerifiedException;
 import com.axonai.platform.domain.model.enums.UserStatus;
 import com.axonai.platform.domain.model.vo.Email;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserAggregateTest {
 
@@ -109,5 +111,43 @@ class UserAggregateTest {
         assertThatThrownBy(() -> user.changePassword("newHashedPassword"))
                 .isInstanceOf(UserInactiveException.class)
                 .hasMessage("Não é possível alterar a senha de um usuário inativo.");
+    }
+
+    @Test
+    @DisplayName("Deve passar na verificação de estado quando o usuário está ACTIVE")
+    void ensureIsActive_shouldPass_whenUserIsActive() {
+        // Given
+        UserAggregate user = UserAggregate.register(new Email("test@example.com"), "hashed");
+        user.activate(); // Status é ACTIVE
+
+        // When / Then
+        // Nenhuma exceção deve ser lançada
+        assertDoesNotThrow(user::ensureIsActive);
+    }
+
+    @Test
+    @DisplayName("Deve lançar UserInactiveException quando o usuário está INACTIVE")
+    void ensureIsActive_shouldThrowUserInactiveException_whenUserIsInactive() {
+        // Given
+        UserAggregate user = UserAggregate.register(new Email("test@example.com"), "hashed");
+        user.activate();
+        user.deactivate(); // Status é INACTIVE
+
+        // When / Then
+        assertThatThrownBy(user::ensureIsActive)
+                .isInstanceOf(UserInactiveException.class)
+                .hasMessage("A operação não pode ser executada pois o usuário está inativo.");
+    }
+
+    @Test
+    @DisplayName("Deve lançar UserNotVerifiedException quando o usuário está PENDING_VERIFICATION")
+    void ensureIsActive_shouldThrowUserNotVerifiedException_whenUserIsPending() {
+        // Given
+        UserAggregate user = UserAggregate.register(new Email("test@example.com"), "hashed"); // Status é PENDING_VERIFICATION
+
+        // When / Then
+        assertThatThrownBy(user::ensureIsActive)
+                .isInstanceOf(UserNotVerifiedException.class)
+                .hasMessage("A operação não pode ser executada pois o usuário ainda não verificou a sua conta.");
     }
 }
