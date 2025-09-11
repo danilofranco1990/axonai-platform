@@ -5,6 +5,7 @@ import com.axonai.platform.domain.exception.UserInactiveException;
 import com.axonai.platform.domain.exception.UserNotVerifiedException;
 import com.axonai.platform.domain.model.enums.UserStatus;
 import com.axonai.platform.domain.model.vo.Email;
+import com.axonai.platform.domain.model.vo.HashedPassword;
 import com.axonai.platform.domain.model.vo.UserId;
 import java.time.Instant;
 import java.util.Objects;
@@ -18,13 +19,14 @@ public class UserAggregate {
 
     private final UserId userId;
     private final Email email;
-    private String hashedPassword;
+    private HashedPassword hashedPassword;
     private UserStatus status;
     private final Instant createdAt;
     private Instant updatedAt;
     private Long version;
 
-    private UserAggregate(UserId userId, Email email, String hashedPassword, UserStatus status) {
+    private UserAggregate(
+            UserId userId, Email email, HashedPassword hashedPassword, UserStatus status) {
         this.userId = Objects.requireNonNull(userId, "User ID não pode ser nulo.");
         this.email = Objects.requireNonNull(email, "Email não pode ser nulo.");
         this.hashedPassword =
@@ -34,12 +36,12 @@ public class UserAggregate {
         this.updatedAt = this.createdAt;
     }
 
-    public static UserAggregate register(Email email, String hashedPassword) {
+    public static UserAggregate register(Email email, HashedPassword hashedPassword) {
         return new UserAggregate(
                 UserId.generate(), email, hashedPassword, UserStatus.PENDING_VERIFICATION);
     }
 
-    public void changePassword(String newHashedPassword) {
+    public void changePassword(HashedPassword newHashedPassword) {
         if (this.status == UserStatus.INACTIVE) {
             throw new UserInactiveException(
                     "Não é possível alterar a senha de um usuário inativo.");
@@ -99,7 +101,7 @@ public class UserAggregate {
         return email;
     }
 
-    public String getHashedPassword() {
+    public HashedPassword getHashedPassword() { // MUDANÇA AQUI
         return hashedPassword;
     }
 
