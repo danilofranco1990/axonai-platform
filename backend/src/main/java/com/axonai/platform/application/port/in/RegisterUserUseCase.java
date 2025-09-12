@@ -1,3 +1,5 @@
 package com.axonai.platform.application.port.in;
 
-public class RegisterUserUseCase {}
+public interface RegisterUserUseCase {
+    void registerUser(RegisterUserCommand command);
+}
