@@ -1,18 +1,19 @@
 package com.axonai.platform.application.port.in;
 
-import com.axonai.platform.application.port.in.AuthenticationResult;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AuthenticationResultTest {
 
     @Test
     @DisplayName("Deve criar AuthenticationResult com valores corretos")
     void deveCriarAuthenticationResultComValoresCorretos() {
-        AuthenticationResult.UserInfo userInfo = new AuthenticationResult.UserInfo("1", "user@email.com", "User Name");
-        AuthenticationResult result = new AuthenticationResult("token123", 3600L, "refresh456", "Bearer", userInfo);
+        AuthenticationResult.UserInfo userInfo =
+                new AuthenticationResult.UserInfo("1", "user@email.com", "User Name");
+        AuthenticationResult result =
+                new AuthenticationResult("token123", 3600L, "refresh456", "Bearer", userInfo);
 
         assertEquals("token123", result.accessToken());
         assertEquals(3600L, result.expiresIn());
@@ -24,7 +25,8 @@ class AuthenticationResultTest {
     @Test
     @DisplayName("Deve criar UserInfo com valores corretos")
     void deveCriarUserInfoComValoresCorretos() {
-        AuthenticationResult.UserInfo userInfo = new AuthenticationResult.UserInfo("2", "test@domain.com", "Test User");
+        AuthenticationResult.UserInfo userInfo =
+                new AuthenticationResult.UserInfo("2", "test@domain.com", "Test User");
 
         assertEquals("2", userInfo.id());
         assertEquals("test@domain.com", userInfo.email());
@@ -34,8 +36,10 @@ class AuthenticationResultTest {
     @Test
     @DisplayName("Deve testar igualdade entre AuthenticationResults")
     void deveTestarIgualdadeEntreAuthenticationResults() {
-        AuthenticationResult.UserInfo userInfo1 = new AuthenticationResult.UserInfo("1", "a@b.com", "A");
-        AuthenticationResult.UserInfo userInfo2 = new AuthenticationResult.UserInfo("1", "a@b.com", "A");
+        AuthenticationResult.UserInfo userInfo1 =
+                new AuthenticationResult.UserInfo("1", "a@b.com", "A");
+        AuthenticationResult.UserInfo userInfo2 =
+                new AuthenticationResult.UserInfo("1", "a@b.com", "A");
         AuthenticationResult result1 = new AuthenticationResult("t", 1L, "r", "type", userInfo1);
         AuthenticationResult result2 = new AuthenticationResult("t", 1L, "r", "type", userInfo2);
 
@@ -46,7 +50,8 @@ class AuthenticationResultTest {
     @Test
     @DisplayName("Deve permitir campos nulos")
     void devePermitirCamposNulos() {
-        AuthenticationResult.UserInfo userInfo = new AuthenticationResult.UserInfo(null, null, null);
+        AuthenticationResult.UserInfo userInfo =
+                new AuthenticationResult.UserInfo(null, null, null);
         AuthenticationResult result = new AuthenticationResult(null, 0L, null, null, userInfo);
 
         assertNull(result.accessToken());

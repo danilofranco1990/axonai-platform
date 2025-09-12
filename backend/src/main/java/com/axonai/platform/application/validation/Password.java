@@ -13,9 +13,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
-    String message() default "Senha inválida. Deve ter entre 8 e 100 caracteres, " +
-            "conter pelo menos uma letra maiúscula, uma minúscula, " +
-            "um número e um caractere especial.";
+    String message() default
+            "Senha inválida. Deve ter entre 8 e 100 caracteres, "
+                    + "conter pelo menos uma letra maiúscula, uma minúscula, "
+                    + "um número e um caractere especial.";
 
     Class<?>[] groups() default {};
 

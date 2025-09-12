@@ -1,12 +1,10 @@
-
 package com.axonai.platform.application.port.in;
 
-import jakarta.validation.*;
-import org.junit.jupiter.api.*;
-
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import jakarta.validation.*;
+import java.util.Set;
+import org.junit.jupiter.api.*;
 
 class LoginCommandTest {
 
@@ -34,7 +32,8 @@ class LoginCommandTest {
         LoginCommand cmd = new LoginCommand("", "password123".toCharArray());
         Set<ConstraintViolation<LoginCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
+        assertTrue(
+                violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -43,7 +42,8 @@ class LoginCommandTest {
         LoginCommand cmd = new LoginCommand("email-invalido", "password123".toCharArray());
         Set<ConstraintViolation<LoginCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
+        assertTrue(
+                violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -52,7 +52,9 @@ class LoginCommandTest {
         LoginCommand cmd = new LoginCommand("user@email.com", null);
         Set<ConstraintViolation<LoginCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
@@ -61,7 +63,9 @@ class LoginCommandTest {
         LoginCommand cmd = new LoginCommand("user@email.com", "short".toCharArray());
         Set<ConstraintViolation<LoginCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test

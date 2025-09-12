@@ -1,12 +1,10 @@
-
 package com.axonai.platform.application.port.in;
 
-import jakarta.validation.*;
-import org.junit.jupiter.api.*;
-
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import jakarta.validation.*;
+import java.util.Set;
+import org.junit.jupiter.api.*;
 
 class RegisterUserCommandTest {
 
@@ -34,16 +32,19 @@ class RegisterUserCommandTest {
         RegisterUserCommand cmd = new RegisterUserCommand("", "Senha@123".toCharArray());
         Set<ConstraintViolation<RegisterUserCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
+        assertTrue(
+                violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
     @DisplayName("Deve validar e-mail inválido")
     void deveValidarEmailInvalido() {
-        RegisterUserCommand cmd = new RegisterUserCommand("email-invalido", "Senha@123".toCharArray());
+        RegisterUserCommand cmd =
+                new RegisterUserCommand("email-invalido", "Senha@123".toCharArray());
         Set<ConstraintViolation<RegisterUserCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
+        assertTrue(
+                violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("email")));
     }
 
     @Test
@@ -52,7 +53,9 @@ class RegisterUserCommandTest {
         RegisterUserCommand cmd = new RegisterUserCommand("user@email.com", null);
         Set<ConstraintViolation<RegisterUserCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
@@ -62,7 +65,9 @@ class RegisterUserCommandTest {
         RegisterUserCommand cmd = new RegisterUserCommand("user@email.com", "senha".toCharArray());
         Set<ConstraintViolation<RegisterUserCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
@@ -71,7 +76,9 @@ class RegisterUserCommandTest {
         RegisterUserCommand cmd = new RegisterUserCommand("user@email.com", "S@1a".toCharArray());
         Set<ConstraintViolation<RegisterUserCommand>> violations = validator.validate(cmd);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(
+                violations.stream()
+                        .anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test

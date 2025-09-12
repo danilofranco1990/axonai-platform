@@ -1,15 +1,14 @@
 package com.axonai.platform.application.port.out;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.axonai.platform.domain.model.aggregate.UserAggregate;
 import com.axonai.platform.domain.model.vo.Email;
 import com.axonai.platform.domain.model.vo.UserId;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class UserRepositoryPortTest {
 
