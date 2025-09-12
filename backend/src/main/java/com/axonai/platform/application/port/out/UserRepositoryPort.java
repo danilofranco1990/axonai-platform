@@ -6,8 +6,8 @@ import com.axonai.platform.domain.model.vo.UserId; // Assumindo a existência de
 import java.util.Optional;
 
 /**
- * Porta de Saída (Output Port) que define o contrato para operações de persistência
- * com o agregado de Usuário. As operações são intencionalmente explícitas.
+ * Porta de Saída (Output Port) que define o contrato para operações de persistência com o agregado
+ * de Usuário. As operações são intencionalmente explícitas.
  */
 public interface UserRepositoryPort {
 
