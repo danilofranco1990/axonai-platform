@@ -1,10 +1,13 @@
 package com.axonai.platform.identity.application.service;
 
+import com.axonai.platform.identity.application.exception.AuthenticationFailureException;
 import com.axonai.platform.identity.application.port.in.AuthenticationResult;
 import com.axonai.platform.identity.application.port.in.LoginCommand;
 import com.axonai.platform.identity.application.port.in.LoginUseCase;
 import com.axonai.platform.identity.application.port.out.JwtProvider;
 import com.axonai.platform.identity.application.port.out.UserRepositoryPort;
+import com.axonai.platform.identity.domain.model.aggregate.UserAggregate;
+import com.axonai.platform.identity.domain.model.vo.Email;
 import com.axonai.platform.identity.domain.service.PasswordPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +28,19 @@ public class LoginUserService implements LoginUseCase {
         this.jwtProvider = jwtProvider;
     }
 
-    @Transactional(readOnly = true) // Operação de login é apenas de leitura
+    private static final String AUTH_FAILURE_MESSAGE = "E-mail ou senha inválidos.";
+
+    @Transactional(readOnly = true)
     @Override
     public AuthenticationResult login(LoginCommand command) {
-        // Lógica de orquestração do login será implementada aqui.
+        final var email = new Email(command.email());
+
+        // 1. Buscar o usuário pelo e-mail usando a porta do repositório
+        UserAggregate user = userRepositoryPort.findByEmail(email)
+                // 2. Se não encontrar, lançar a exceção de falha de autenticação
+                .orElseThrow(() -> new AuthenticationFailureException(AUTH_FAILURE_MESSAGE));
+
+        // TODO: Próximos passos: verificar status, verificar senha, gerar token.
         return null; // Placeholder
     }
 }
