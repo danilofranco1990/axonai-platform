@@ -34,20 +34,35 @@ public class LoginUserService implements LoginUseCase {
     @Transactional(readOnly = true)
     @Override
     public AuthenticationResult login(LoginCommand command) {
-        final var email = new Email(command.email());
-
-        // 1. Buscar o usuário pelo e-mail usando a porta do repositório
-        UserAggregate user = userRepositoryPort.findByEmail(email)
-                // 2. Se não encontrar, lançar a exceção de falha de autenticação
-                .orElseThrow(() -> new AuthenticationFailureException(AUTH_FAILURE_MESSAGE));
-
         try {
-            user.ensureIsActive();
-        } catch (UserDomainException ex) {
-            throw new AuthenticationFailureException(AUTH_FAILURE_MESSAGE);
-        }
+            final var email = new Email(command.email());
 
-        // TODO: Próximos passos: verificar senha, gerar token.
-        return null; // Placeholder
+            UserAggregate user = userRepositoryPort.findByEmail(email)
+                    .orElseThrow(() -> new AuthenticationFailureException(AUTH_FAILURE_MESSAGE));
+
+            try {
+                user.ensureIsActive();
+            } catch (UserDomainException ex) {
+                throw new AuthenticationFailureException(AUTH_FAILURE_MESSAGE);
+            }
+
+            // 1. Delegar a verificação da senha para o serviço de domínio
+            boolean passwordMatches = passwordPolicy.verify(
+                    new String(command.password()),
+                    user.getHashedPassword()
+            );
+
+            // 2. Se a senha não corresponder, lançar a exceção de falha
+            if (!passwordMatches) {
+                throw new AuthenticationFailureException(AUTH_FAILURE_MESSAGE);
+            }
+
+            // TODO: Próximo passo: gerar o token.
+            return null; // Placeholder
+
+        } finally {
+            // 3. Garantir que a senha seja limpa da memória em todos os cenários
+            command.clearPassword();
+        }
     }
 }
