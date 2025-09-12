@@ -6,6 +6,7 @@ import com.axonai.platform.identity.application.port.in.LoginCommand;
 import com.axonai.platform.identity.application.port.in.LoginUseCase;
 import com.axonai.platform.identity.application.port.out.JwtProvider;
 import com.axonai.platform.identity.application.port.out.UserRepositoryPort;
+import com.axonai.platform.identity.domain.exception.UserDomainException;
 import com.axonai.platform.identity.domain.model.aggregate.UserAggregate;
 import com.axonai.platform.identity.domain.model.vo.Email;
 import com.axonai.platform.identity.domain.service.PasswordPolicy;
@@ -40,7 +41,13 @@ public class LoginUserService implements LoginUseCase {
                 // 2. Se não encontrar, lançar a exceção de falha de autenticação
                 .orElseThrow(() -> new AuthenticationFailureException(AUTH_FAILURE_MESSAGE));
 
-        // TODO: Próximos passos: verificar status, verificar senha, gerar token.
+        try {
+            user.ensureIsActive();
+        } catch (UserDomainException ex) {
+            throw new AuthenticationFailureException(AUTH_FAILURE_MESSAGE);
+        }
+
+        // TODO: Próximos passos: verificar senha, gerar token.
         return null; // Placeholder
     }
 }
