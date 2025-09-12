@@ -2,7 +2,7 @@ package com.axonai.platform.identity.application.port.out;
 
 import com.axonai.platform.identity.domain.model.aggregate.UserAggregate;
 import com.axonai.platform.identity.domain.model.vo.Email;
-import com.axonai.platform.identity.domain.model.vo.UserId; // Assumindo a existência de um VO para o ID
+import com.axonai.platform.identity.domain.model.vo.UserId;
 import java.util.Optional;
 
 /**

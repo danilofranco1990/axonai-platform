@@ -20,6 +20,4 @@ public record HashedPassword(String value) {
     public String toString() {
         return "HashedPassword[value=REDACTED]";
     }
-
-
 }

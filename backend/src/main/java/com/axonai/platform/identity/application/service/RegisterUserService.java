@@ -5,21 +5,21 @@ import com.axonai.platform.identity.application.port.in.RegisterUserCommand;
 import com.axonai.platform.identity.application.port.in.RegisterUserUseCase;
 import com.axonai.platform.identity.application.port.out.UserRepositoryPort;
 import com.axonai.platform.identity.domain.model.aggregate.UserAggregate;
+import com.axonai.platform.identity.domain.model.vo.Email;
 import com.axonai.platform.identity.domain.model.vo.HashedPassword;
 import com.axonai.platform.identity.domain.service.PasswordPolicy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.axonai.platform.identity.domain.model.vo.Email;
-/**
- * Serviço de aplicação que orquestra o caso de uso de registro de um novo usuário.
- */
+
+/** Serviço de aplicação que orquestra o caso de uso de registro de um novo usuário. */
 @Service
 public class RegisterUserService implements RegisterUserUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
     private final PasswordPolicy passwordPolicy;
 
-    public RegisterUserService(UserRepositoryPort userRepositoryPort, PasswordPolicy passwordPolicy) {
+    public RegisterUserService(
+            UserRepositoryPort userRepositoryPort, PasswordPolicy passwordPolicy) {
         this.userRepositoryPort = userRepositoryPort;
         this.passwordPolicy = passwordPolicy;
     }
