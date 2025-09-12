@@ -29,17 +29,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class RegisterUserServiceTest {
 
-    @Mock
-    private UserRepositoryPort userRepositoryPort;
+    @Mock private UserRepositoryPort userRepositoryPort;
 
-    @Mock
-    private PasswordPolicy passwordPolicy;
+    @Mock private PasswordPolicy passwordPolicy;
 
-    @InjectMocks
-    private RegisterUserService registerUserService;
+    @InjectMocks private RegisterUserService registerUserService;
 
-    @Captor
-    private ArgumentCaptor<UserAggregate> userAggregateCaptor;
+    @Captor private ArgumentCaptor<UserAggregate> userAggregateCaptor;
 
     private RegisterUserCommand command;
     private Email testEmail;
