@@ -1,5 +1,6 @@
 package com.axonai.platform.application.port.in;
 
+import com.axonai.platform.application.validation.Password;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,15 +13,13 @@ import jakarta.validation.constraints.Pattern;
  */
 public record RegisterUserCommand(
         @NotBlank(message = "O e-mail não pode ser vazio.")
-                @Email(message = "O formato do e-mail é inválido.")
-                String email,
+        @Email(message = "Formato de e-mail inválido.")
+        String email,
+
         @NotNull(message = "A senha não pode ser nula.")
-                @Pattern(
-                        regexp =
-                                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-                        message =
-                                "A senha deve ter no mínimo 8 caracteres, incluindo ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.")
-                char[] password) {
+        @Password
+        char[] password
+) {
 
     public void clearPassword() {
         java.util.Arrays.fill(password, '\0');
