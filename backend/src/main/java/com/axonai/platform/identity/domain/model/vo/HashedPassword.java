@@ -16,14 +16,10 @@ public record HashedPassword(String value) {
         }
     }
 
-    /**
-     * Sobrescreve o método toString() para evitar o vazamento do hash em logs ou outras
-     * representações de string.
-     *
-     * @return Uma representação redigida do objeto.
-     */
     @Override
     public String toString() {
         return "HashedPassword[value=REDACTED]";
     }
+
+
 }

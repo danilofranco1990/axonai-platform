@@ -1,12 +1,15 @@
 package com.axonai.platform.identity.domain.model.aggregate;
 
 import com.axonai.platform.identity.domain.exception.InvalidUserStatusTransitionException;
+import com.axonai.platform.identity.domain.exception.UserAuthenticationException;
 import com.axonai.platform.identity.domain.exception.UserInactiveException;
 import com.axonai.platform.identity.domain.exception.UserNotVerifiedException;
 import com.axonai.platform.identity.domain.model.enums.UserStatus;
 import com.axonai.platform.identity.domain.model.vo.Email;
 import com.axonai.platform.identity.domain.model.vo.HashedPassword;
 import com.axonai.platform.identity.domain.model.vo.UserId;
+import com.axonai.platform.identity.domain.service.PasswordPolicy;
+
 import java.time.Instant;
 import java.util.Objects;
 
